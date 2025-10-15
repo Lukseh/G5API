@@ -11,23 +11,12 @@
 import { Router } from "express";
 import config from "config";
 import Utils from "../../utility/utils.js";
+import { spinupGameServer } from "../../services/docker.js"
+import { ContainerInfo } from "../../types/Docker.js"
+
 var Docker = require('dockerode');
 
 const router: Router = Router();
-
-interface ContainerInfo {
-  id: number;
-  docker: {
-    useDocker: boolean;
-    useSocket: boolean;
-    socket?: string;
-    host?: string;
-    port?: number;
-  };
-  port: number;
-  host: string;
-  created_at: number;
-}
 
 let containers: ContainerInfo[] = []; // create in-memory active containers array
 
@@ -47,21 +36,6 @@ const useSocket = !!DOCKER_SOCKET
 const docker = useSocket
   ? new Docker({ socketPath: DOCKER_SOCKET })
   : new Docker({ host: DOCKER_HOST, port: DOCKER_PORT });
-
-async function spinupGameServer(docker:any, container_id:number, server_port:number) {
-  await docker.createContainer({
-    Image: "xbird/cs2-matchzy",
-    name: `${container_id}`,
-    ExposedPorts: {
-      "27015/tcp": {}
-    },
-    HostConfig: {
-      PortBindings: {
-        "27015/tcp": [{ HostPort: server_port.toString() }]
-      }
-    }
-  });
-}
 
 router.get("/",Utils.ensureAuthenticated, (req, res)=>{
   try {
