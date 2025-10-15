@@ -29,5 +29,13 @@
   },
   "super_admins": {
     "steam_ids": "$SUPERADMINS"
+  },
+  "docker": {
+    "useDocker": false,
+    "port": 2375,
+    "host": "localhost",
+    "socket_file": "",
+    "mountconfigs": false,
+    "mountdemos": false
   }
 }
