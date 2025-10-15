@@ -31,8 +31,8 @@ interface ContainerInfo {
 
 let containers: ContainerInfo[] = []; // create in-memory active containers array
 
-var newcontainer:number = 0
-var server_port = 27015
+let newcontainer:number = 0
+let server_port = 27015
 const DOCKER_HOST = process.env.DOCKER_HOST || config.get("docker.host") || "localhost"
 const DOCKER_PORT = Number(process.env.DOCKER_PORT || config.get("docker.port"))
 // or use socket
@@ -63,12 +63,21 @@ async function spinupGameServer(docker:any, container_id:number, server_port:num
   });
 }
 
-router.get("/", (req, res)=>{
-  res.send(containers)
+router.get("/",Utils.ensureAuthenticated, (req, res)=>{
+  try {
+  if (req.user && Utils.adminCheck(req.user)) {
+    res.send(containers)
+  } else {
+      return res.status(403).json({ message: "You are not authorized to do this." })
+    }
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ message: (err as Error).toString() })
+  }
 })
 router.post("/create", Utils.ensureAuthenticated, async (req, res) => {
   try {
-    if (req.user && Utils.adminCheck(req.user)) {
+    if (req.user && Utils.superAdminCheck(req.user)) {
       const container_id = newcontainer++;
       const gameport = server_port++;
       const containerInfo: ContainerInfo = useSocket ? {
