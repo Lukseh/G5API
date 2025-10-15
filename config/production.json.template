@@ -11,7 +11,8 @@
     "uploadDemos": $UPLOADDEMOS,
     "localLoginEnabled": $LOCALLOGINS,
     "redisUrl": "$REDISURL",
-    "redisTTL": $REDISTTL
+    "redisTTL": $REDISTTL,
+    "useDocker": false
   },
   "production": {
     "driver": "mysql",
@@ -31,7 +32,6 @@
     "steam_ids": "$SUPERADMINS"
   },
   "docker": {
-    "useDocker": false,
     "port": 2375,
     "host": "localhost",
     "socket_file": "",

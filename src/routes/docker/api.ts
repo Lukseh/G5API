@@ -38,7 +38,7 @@ const DOCKER_PORT = Number(process.env.DOCKER_PORT || config.get("docker.port"))
 // or use socket
 const DOCKER_SOCKET = process.env.DOCKER_SOCKET || config.get("docker.socket_file")
 
-const useDocker = Boolean(config.get("docker.useDocker"));
+const useDocker = Boolean(config.get("server.useDocker"));
 if (typeof(useDocker) != "boolean") {
   console.log("[Docker] Please use 0 / 1 / false / true in config when specifying whenever to use or not use docker.")
 }
